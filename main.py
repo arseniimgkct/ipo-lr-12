@@ -1,5 +1,7 @@
 import transport
 
+company = transport.TransportCompany("MyCompany", [], [])
+
 menu = """
 1. Создать клиента
 2. Создать самолет
@@ -12,45 +14,67 @@ menu = """
 
 def select_action():
     try:
-        action = int(input("Выберите действие: "))
-        return action
+        return int(input("Выберите действие: "))
     except:
-        return 'invalid'
+        return None
 
-while (True):
+
+while True:
     print(menu)
     action = select_action()
-    
-    if (action == 'invalid'):
-        print('Выбрано некорректное действие.')
+
+    if action is None:
+        print("Некорректный ввод.")
         continue
-    
-    match (action):
-        # создать клиента
+
+    match action:
         case 1:
-            print("Not Implemented")
-        
-        # создать самолет
+            name = input("Имя: ")
+            weight = float(input("Вес груза: "))
+            vip = input("VIP? (y/n): ").lower() == "y"
+
+            client = transport.Client(name, weight, vip)
+            company.add_client(client)
+
+            print("Клиент добавлен.")
+
         case 2:
-            print("Not Implemented")
-            
-        # создать поезд
+            capacity = float(input("Вместимость: "))
+            altitude = int(input("Макс. высота: "))
+
+            airplane = transport.Airplane(capacity, altitude)
+            company.add_vehicle(airplane)
+
+            print("Самолёт добавлен.")
+
         case 3:
-            print("Not Implemented")
-            
-        # вывести всех клиентов
+            capacity = float(input("Вместимость: "))
+            cars = int(input("Кол-во вагонов: "))
+
+            train = transport.Train(capacity, cars)
+            company.add_vehicle(train)
+
+            print("Поезд добавлен.")
+
         case 4:
-            print("Not Implemented")
-        
-        # вывести весь транспорт
+            print("\n--- Клиенты ---")
+            for c in company.clients:
+                print(c)
+
         case 5:
-            print("Not Implemented")
-            
-        # оптимизировать клиентов и транспорт
+            print("\n--- Транспорт ---")
+            for v in company.vehicles:
+                print(v)
+                print()
+
         case 6:
-            print("Not Implemented")
-            
-        # Exit
+            print("Оптимизация...")
+            company.optimize_cargo_distribution()
+            print("Грузы распределены.")
+
         case 7:
-            print("Заканчиваем работу")
+            print("Выход.")
             break
+
+        case _:
+            print("Некорректное действие.")

@@ -1,53 +1,50 @@
 import uuid
 from .client import Client
 
+
 class CapacityOverloadError(Exception):
-    def __init__(self, message):
-        self.message = message
+    pass
+
 
 class Vehicle:
-    vehicle_id = ''
-    capacity = 0
-    current_load = 0
-    clients_list = []
-    
-    def __init__(self, capacity, clients_list, current_load=0):
-        
-        if (
-            type(capacity) != int and type(capacity) != float or
-            type(clients_list) != list and type(clients_list) != tuple or
-            type(current_load) != int and type(current_load) != float
-            ):
-            raise TypeError
-        
+    def __init__(self, capacity, clients_list=None, current_load=0):
+
+        if not isinstance(capacity, (int, float)):
+            raise TypeError("capacity must be number")
+
+        if clients_list is not None and not isinstance(clients_list, (list, tuple)):
+            raise TypeError("clients_list must be list or tuple")
+
+        if not isinstance(current_load, (int, float)):
+            raise TypeError("current_load must be number")
+
         if capacity < 0 or current_load < 0:
-            raise ValueError
-        
-        self.vehicle_id = uuid.uuid5()
+            raise ValueError("capacity and current_load must be >= 0")
+
+        self.vehicle_id = uuid.uuid4()
         self.capacity = capacity
-        self.clients_list = clients_list
+        self.clients_list = list(clients_list) if clients_list else []
         self.current_load = current_load
-        
+
     def load_cargo(self, client):
-        if (
-            type(client) != Client or 
-            type(client.cargo_weight) != int or 
-            type(client.is_vip) != bool or
-            type(client.name) != str
-        ):
-            raise TypeError
-        
+        if not isinstance(client, Client):
+            raise TypeError("client must be instance of Client")
+
         if client.cargo_weight < 0:
-            raise ValueError
-        
+            raise ValueError("cargo_weight must be >= 0")
+
         if client.cargo_weight + self.current_load > self.capacity:
-            raise CapacityOverloadError(f'Capacity: {self.capacity}\nCurrent load: {self.current_load}\n Client cargo: {client.cargo_weight}, ')
+            raise CapacityOverloadError(
+                f"capacity={self.capacity}, load={self.current_load}, cargo={client.cargo_weight}"
+            )
 
         self.current_load += client.cargo_weight
-        self.clients_list.append({
-            "name": client.name,
-            "is_vip": client.is_vip
-        })
-    
+        self.clients_list.append(client)
+
     def __str__(self):
-        return f'ID: {self.vehicle_id}\nCapacity: {self.capacity}\nCurrent load: {self.current_load}'
+        return (
+            f"ID: {self.vehicle_id}\n"
+            f"Capacity: {self.capacity}\n"
+            f"Current load: {self.current_load}\n"
+            f"Clients: {[c.name for c in self.clients_list]}"
+        )
