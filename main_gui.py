@@ -1,25 +1,3 @@
-"""
-transport_gui.py
-
-Tkinter GUI for the provided transport CLI application.
-
-How to use:
-- Place this file in the same folder as your `transport` package (client.py, train.py, airplane.py, vehicle.py, transport_company.py).
-- Run: python transport_gui.py
-
-Features implemented (per requirements):
-- Main window with menu (Export result, About), control panel, two tables (clients, vehicles), status bar.
-- Add / Edit / Delete client and vehicle via dialogs with validation.
-- Double-click to edit an item.
-- Distribute cargo (calls company.optimize_cargo_distribution()) and shows results in a modal.
-- Save/Load company state (JSON).
-- Export distribution results to JSON/CSV.
-- Tooltips, keyboard shortcuts (Enter=save in dialog, Esc=cancel), column sorting.
-
-Notes / placeholders:
-- About dialog shows placeholders for lab number, variant and developer name. Edit as needed.
-"""
-
 import json
 import csv
 import tkinter as tk
