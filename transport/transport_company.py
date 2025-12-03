@@ -32,6 +32,20 @@ class TransportCompany:
 
         self.clients.append(client)
 
+    def remove_client(self, client):
+        if client in self.clients:
+            self.clients.remove(client)
+        
+        for vehicle in self.vehicles:
+            if client in vehicle.clients_list:
+                vehicle.clients_list.remove(client)
+                vehicle.current_load -= client.cargo_weight
+
+    def remove_vehicle(self, vehicle):
+        if vehicle in self.vehicles:
+            self.vehicles.remove(vehicle)
+
+
     def optimize_cargo_distribution(self):
         sorted_clients = sorted(
             self.clients,
